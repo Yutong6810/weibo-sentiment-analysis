@@ -1,16 +1,28 @@
+# 首先尝试安装 jieba
+try:
+    import jieba
+except ImportError:
+    import subprocess
+    import sys
+    print("正在安装 jieba 库...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "jieba==0.42.1"])
+    import jieba
+
+# 然后继续其他导入
 import streamlit as st
 import pickle
-import jieba
+# ... 其他导入
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import Counter
 import re
 
-# ========== 修复中文字体显示 ==========
+# ========== 中文字体显示 ==========
 import matplotlib
 matplotlib.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'KaiTi']
 matplotlib.rcParams['axes.unicode_minus'] = False
+
 
 # 设置页面
 st.set_page_config(page_title="情感分析可视化系统", layout="wide")
