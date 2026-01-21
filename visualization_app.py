@@ -59,6 +59,15 @@ vectorizer = model_info['vectorizer']
 # 标签映射
 LABELS = {0: "客观", 1: "积极", 2: "消极"}
 COLORS = {'积极': '#4CAF50', '消极': '#F44336', '客观': '#2196F3'}
+# 标签映射 (根据字体情况动态选择)
+if 'FONT_FALLBACK_TO_ENGLISH' in globals() and FONT_FALLBACK_TO_ENGLISH:
+    # 如果字体回退到了英文，标签也用英文
+    LABELS = {0: "Neutral", 1: "Positive", 2: "Negative"}
+    COLORS = {'Positive': '#4CAF50', 'Negative': '#F44336', 'Neutral': '#2196F3'}
+else:
+    # 否则，使用原始中文标签
+    LABELS = {0: "客观", 1: "积极", 2: "消极"}
+    COLORS = {'积极': '#4CAF50', '消极': '#F44336', '客观': '#2196F3'}
 
 # ==================== 辅助函数 ====================
 def analyze_text(text):
