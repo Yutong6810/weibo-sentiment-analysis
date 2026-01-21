@@ -141,7 +141,8 @@ with tab1:
             if labels:  # 确保有数据
                 ax.pie(sizes, labels=labels, autopct='%1.1f%%', 
                        colors=[COLORS.get(l, '#999') for l in labels])
-                ax.set_title("当前情感分布")
+                # 图表标题改为英文
+                ax.set_title("Current Sentiment Distribution")
                 st.pyplot(fig)
             else:
                 st.info("暂无分析记录")
@@ -178,7 +179,8 @@ with tab2:
         fig1, ax1 = plt.subplots(figsize=(8, 6))
         ax1.pie(sentiment_counts.values, labels=sentiment_counts.index, 
                 autopct='%1.1f%%', colors=[COLORS.get(l, '#999') for l in sentiment_counts.index])
-        ax1.set_title("sentiment Distribution ratio")
+        # 图表标题改为英文
+        ax1.set_title("Sentiment Distribution")
         st.pyplot(fig1)
         
         # 图表2：情感分布柱状图
@@ -187,9 +189,11 @@ with tab2:
         fig2, ax2 = plt.subplots(figsize=(8, 6))
         bars = ax2.bar(sentiment_counts.index, sentiment_counts.values, 
                       color=[COLORS.get(l, '#999') for l in sentiment_counts.index])
-        ax2.set_xlabel("sentiment type")
-        ax2.set_ylabel("Number of comments")
-        ax2.set_title("sentiment Distribution count")
+        # 坐标轴标签改为英文
+        ax2.set_xlabel("Sentiment")
+        ax2.set_ylabel("Number of Comments")
+        # 图表标题改为英文
+        ax2.set_title("Sentiment Distribution Count")
         
         # 在柱子上显示数字
         for bar in bars:
@@ -210,9 +214,11 @@ with tab2:
             ax3.hist(data, alpha=0.5, label=sentiment, 
                     color=COLORS.get(sentiment), bins=10)
         
+        # 坐标轴标签改为英文
         ax3.set_xlabel("Confidence")
-        ax3.set_ylabel("Number of comments")
-        ax3.set_title("Confidence Distribution by sentiment")
+        ax3.set_ylabel("Number of Comments")
+        # 图表标题改为英文
+        ax3.set_title("Confidence Distribution by Sentiment")
         ax3.legend()
         ax3.grid(True, alpha=0.3)
         
@@ -242,7 +248,8 @@ with tab2:
             ax_brand.bar(brand_data['情感'], brand_data['数量'],
                          color=['#4CAF50', '#F44336', '#2196F3'])
             ax_brand.set_title("Brand Reputation Analysis")
-            ax_brand.set_ylabel("number of comments")
+            # Y轴标签改为英文
+            ax_brand.set_ylabel("Number of Comments")
             st.pyplot(fig_brand)
         
         with scenario_col2:
