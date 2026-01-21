@@ -1,3 +1,32 @@
+# ===== 1. 设置中文字体，防止图表乱码 (云端部署专用) =====
+import matplotlib
+import os
+
+# 指定一个云端可用的中文字体（这里选择开源字体“文泉驿微米黑”）
+# 如果这个字体不存在，代码会尝试下载
+font_name = 'WenQuanYi Micro Hei'
+matplotlib.font_manager.fontManager.addfont("/usr/share/fonts/truetype/wqy/wqy-microhei.ttc")  # 常见Linux路径
+
+# 如果上面路径的字体不存在，尝试从网络下载并加载一个更通用的字体
+if not os.path.exists("/usr/share/fonts/truetype/wqy/wqy-microhei.ttc"):
+    try:
+        # 尝试下载一个开源中文字体（思源黑体）
+        import urllib.request
+        font_url = "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf"
+        font_path = "/tmp/NotoSansCJKsc-Regular.otf"
+        urllib.request.urlretrieve(font_url, font_path)
+        matplotlib.font_manager.fontManager.addfont(font_path)
+        font_name = matplotlib.font_manager.FontProperties(fname=font_path).get_name()
+    except Exception as e:
+        # 如果下载失败，回退到英文
+        print(f"无法加载中文字体，将使用英文: {e}")
+        font_name = 'DejaVu Sans'  # 一个广泛可用的英文字体
+
+# 应用字体设置
+matplotlib.rcParams['font.sans-serif'] = [font_name]
+matplotlib.rcParams['axes.unicode_minus'] = False
+# ===== 字体设置结束 =====
+
 import streamlit as st
 import pickle
 import jieba
