@@ -64,6 +64,14 @@ def load_adaboost_nb_model():
 
 @st.cache_resource
 def load_bert_model():
+    # 检查模型文件是否存在，如果不存在则下载
+    import os
+    if not os.path.exists('sentiment_model_fixed.pth'):
+        st.warning("正在下载BERT模型文件，这可能需要几分钟...")
+        import urllib.request
+        # 此处替换为实际的下载链接
+        model_url = "通过网盘分享的文件：bert-base-chinese.zip链接: https://pan.baidu.com/s/19VrvfB5GVEPUNvi6OxHXmQ?pwd=9wsc 提取码: 9wsc/sentiment_model_fixed.pth"
+        urllib.request.urlretrieve(model_url, 'sentiment_model_fixed.pth')
     """加载BERT深度学习模型"""
     st.info("正在加载BERT模型，首次加载可能需要较长时间...")
     try:
