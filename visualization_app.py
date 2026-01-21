@@ -239,10 +239,10 @@ with tab2:
             })
             
             fig_brand, ax_brand = plt.subplots(figsize=(6, 4))
-            ax_brand.bar(brand_data['情感'], brand_data['数量'], 
+            ax_brand.bar(brand_data['情感'], brand_data['数量'],
                          color=['#4CAF50', '#F44336', '#2196F3'])
-            ax_brand.set_title("品牌评价情感分布")
-            ax_brand.set_ylabel("评论数量")
+            ax_brand.set_title("Brand Reputation Analysis")
+            ax_brand.set_ylabel("number of comments")
             st.pyplot(fig_brand)
         
         with scenario_col2:
@@ -273,7 +273,7 @@ with tab3:
         df_display = pd.DataFrame(st.session_state.results)
         df_display = df_display[['text', 'sentiment', 'confidence']]
         df_display['confidence'] = df_display['confidence'].apply(lambda x: f"{x:.2%}")
-        df_display.columns = ['文本', '情感', '置信度']
+        df_display.columns = ['text', 'sentiment', 'confidence']
         
         st.dataframe(df_display, use_container_width=True)
         
