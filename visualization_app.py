@@ -1,27 +1,3 @@
-# ===== 精简版中文字体设置，失败则自动回退到英文 =====
-import matplotlib
-import os
-
-# 1. 首先尝试设置为一个常见的中文字体（服务器上可能不存在）
-try:
-    # 尝试几种常见的中文字体路径，如果都找不到会引发异常
-    matplotlib.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'DejaVu Sans Fallback']
-    matplotlib.rcParams['axes.unicode_minus'] = False
-    # 尝试加载一个字符来触发字体查找，如果找不到会进入except
-    matplotlib.pyplot.figure().add_subplot(111).text(0.5, 0.5, '测试', fontproperties=matplotlib.font_manager.FontProperties())
-    print("INFO: 中文字体设置成功。")
-except (OSError, RuntimeError) as e:
-    # 2. 如果失败（大概率），回退到完全使用英文字体
-    print(f"WARNING: 无法加载中文字体 ({e})，已回退到英文字体。")
-    matplotlib.rcParams['font.sans-serif'] = ['DejaVu Sans']
-    matplotlib.rcParams['axes.unicode_minus'] = False
-    # 将标签强制改为英文，确保图表显示正常
-    # 注意：这里定义了全局的回退标签，你原来的LABELS定义在后面会被覆盖或判断
-    FONT_FALLBACK_TO_ENGLISH = True
-else:
-    FONT_FALLBACK_TO_ENGLISH = False
-# ===== 字体设置结束 =====
-
 import streamlit as st
 import pickle
 import jieba
@@ -57,17 +33,9 @@ model = model_info['model']
 vectorizer = model_info['vectorizer']
 
 # 标签映射
-LABELS = {0: "客观", 1: "积极", 2: "消极"}
-COLORS = {'积极': '#4CAF50', '消极': '#F44336', '客观': '#2196F3'}
-# 标签映射 (根据字体情况动态选择)
-if 'FONT_FALLBACK_TO_ENGLISH' in globals() and FONT_FALLBACK_TO_ENGLISH:
-    # 如果字体回退到了英文，标签也用英文
-    LABELS = {0: "Neutral", 1: "Positive", 2: "Negative"}
-    COLORS = {'Positive': '#4CAF50', 'Negative': '#F44336', 'Neutral': '#2196F3'}
-else:
-    # 否则，使用原始中文标签
-    LABELS = {0: "客观", 1: "积极", 2: "消极"}
-    COLORS = {'积极': '#4CAF50', '消极': '#F44336', '客观': '#2196F3'}
+LABELS = {0: "Neutral", 1: "Positive", 2: "Negative"}
+COLORS = {'Positive': '#4CAF50', 'Negative': '#F44336', 'Neutral': '#2196F3'}
+
 
 # ==================== 辅助函数 ====================
 def analyze_text(text):
