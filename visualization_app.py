@@ -210,7 +210,7 @@ with tab2:
             ax3.hist(data, alpha=0.5, label=sentiment, 
                     color=COLORS.get(sentiment), bins=10)
         
-        ax3.set_xlabel("trude confidence")
+        ax3.set_xlabel("Confidence")
         ax3.set_ylabel("Number of comments")
         ax3.set_title("Confidence Distribution by sentiment")
         ax3.legend()
