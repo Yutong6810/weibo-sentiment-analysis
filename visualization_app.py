@@ -178,7 +178,7 @@ with tab2:
         fig1, ax1 = plt.subplots(figsize=(8, 6))
         ax1.pie(sentiment_counts.values, labels=sentiment_counts.index, 
                 autopct='%1.1f%%', colors=[COLORS.get(l, '#999') for l in sentiment_counts.index])
-        ax1.set_title("情感分布比例")
+        ax1.set_title("sentiment Distribution ratio")
         st.pyplot(fig1)
         
         # 图表2：情感分布柱状图
@@ -187,9 +187,9 @@ with tab2:
         fig2, ax2 = plt.subplots(figsize=(8, 6))
         bars = ax2.bar(sentiment_counts.index, sentiment_counts.values, 
                       color=[COLORS.get(l, '#999') for l in sentiment_counts.index])
-        ax2.set_xlabel("情感类别")
-        ax2.set_ylabel("数量")
-        ax2.set_title("各类情感数量统计")
+        ax2.set_xlabel("sentiment type")
+        ax2.set_ylabel("Number of comments")
+        ax2.set_title("sentiment Distribution count")
         
         # 在柱子上显示数字
         for bar in bars:
@@ -210,9 +210,9 @@ with tab2:
             ax3.hist(data, alpha=0.5, label=sentiment, 
                     color=COLORS.get(sentiment), bins=10)
         
-        ax3.set_xlabel("置信度")
-        ax3.set_ylabel("频次")
-        ax3.set_title("模型预测置信度分布")
+        ax3.set_xlabel("trude confidence")
+        ax3.set_ylabel("Number of comments")
+        ax3.set_title("Confidence Distribution by sentiment")
         ax3.legend()
         ax3.grid(True, alpha=0.3)
         
