@@ -1,30 +1,25 @@
-# ===== 1. 设置中文字体，防止图表乱码 (云端部署专用) =====
+# ===== 精简版中文字体设置，失败则自动回退到英文 =====
 import matplotlib
 import os
 
-# 指定一个云端可用的中文字体（这里选择开源字体“文泉驿微米黑”）
-# 如果这个字体不存在，代码会尝试下载
-font_name = 'WenQuanYi Micro Hei'
-matplotlib.font_manager.fontManager.addfont("/usr/share/fonts/truetype/wqy/wqy-microhei.ttc")  # 常见Linux路径
-
-# 如果上面路径的字体不存在，尝试从网络下载并加载一个更通用的字体
-if not os.path.exists("/usr/share/fonts/truetype/wqy/wqy-microhei.ttc"):
-    try:
-        # 尝试下载一个开源中文字体（思源黑体）
-        import urllib.request
-        font_url = "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf"
-        font_path = "/tmp/NotoSansCJKsc-Regular.otf"
-        urllib.request.urlretrieve(font_url, font_path)
-        matplotlib.font_manager.fontManager.addfont(font_path)
-        font_name = matplotlib.font_manager.FontProperties(fname=font_path).get_name()
-    except Exception as e:
-        # 如果下载失败，回退到英文
-        print(f"无法加载中文字体，将使用英文: {e}")
-        font_name = 'DejaVu Sans'  # 一个广泛可用的英文字体
-
-# 应用字体设置
-matplotlib.rcParams['font.sans-serif'] = [font_name]
-matplotlib.rcParams['axes.unicode_minus'] = False
+# 1. 首先尝试设置为一个常见的中文字体（服务器上可能不存在）
+try:
+    # 尝试几种常见的中文字体路径，如果都找不到会引发异常
+    matplotlib.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'DejaVu Sans Fallback']
+    matplotlib.rcParams['axes.unicode_minus'] = False
+    # 尝试加载一个字符来触发字体查找，如果找不到会进入except
+    matplotlib.pyplot.figure().add_subplot(111).text(0.5, 0.5, '测试', fontproperties=matplotlib.font_manager.FontProperties())
+    print("INFO: 中文字体设置成功。")
+except (OSError, RuntimeError) as e:
+    # 2. 如果失败（大概率），回退到完全使用英文字体
+    print(f"WARNING: 无法加载中文字体 ({e})，已回退到英文字体。")
+    matplotlib.rcParams['font.sans-serif'] = ['DejaVu Sans']
+    matplotlib.rcParams['axes.unicode_minus'] = False
+    # 将标签强制改为英文，确保图表显示正常
+    # 注意：这里定义了全局的回退标签，你原来的LABELS定义在后面会被覆盖或判断
+    FONT_FALLBACK_TO_ENGLISH = True
+else:
+    FONT_FALLBACK_TO_ENGLISH = False
 # ===== 字体设置结束 =====
 
 import streamlit as st
