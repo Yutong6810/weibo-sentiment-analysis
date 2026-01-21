@@ -1,11 +1,10 @@
 import streamlit as st
 import pickle
 import jieba
+import re
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 from collections import Counter
-import re
 
 # ========== 中文字体显示 ==========
 import matplotlib
