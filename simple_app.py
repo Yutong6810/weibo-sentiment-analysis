@@ -1,5 +1,31 @@
 # simple_app.py - 极简版本，确保能部署成功
-import streamlit as st
+import streaml# 在 simple_app.py 最开头添加
+import sys
+import subprocess
+import pkg_resources
+
+# 检查并安装必要包
+required = {
+    'scikit-learn': '1.3.2',
+    'pandas': '2.0.3',
+    'numpy': '1.24.3',
+    'jieba': '0.42.1'
+}
+
+for package, version in required.items():
+    try:
+        dist = pkg_resources.get_distribution(package)
+        if dist.version != version:
+            print(f"更新 {package} 从 {dist.version} 到 {version}")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", f"{package}=={version}"])
+    except pkg_resources.DistributionNotFound:
+        print(f"安装 {package}=={version}")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", f"{package}=={version}"])
+
+# 现在导入
+import pickle
+import pandas as pd
+import numpy as npit as st
 import pickle
 import pandas as pd
 import re
