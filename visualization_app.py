@@ -1,9 +1,58 @@
-# visualization_app.py - 统一修改版
+# visualization_app.py
+# ========== 首先加载字体 ==========
+try:
+    from font_loader import load_chinese_fonts, font_loaded
+    load_chinese_fonts()
+except ImportError:
+    # 如果font_loader不存在，使用简易字体设置
+    import matplotlib
+    matplotlib.rcParams['font.sans-serif'] = ['DejaVu Sans', 'Arial Unicode MS']
+    matplotlib.rcParams['axes.unicode_minus'] = False
 
-# 添加BERT模型需要的库
-import torch
-from transformers import BertTokenizer, BertModel
-import torch.nn as nn
+# ========== 修复BERT导入问题 ==========
+import sys
+import os
+
+# 添加当前目录到Python路径
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# 尝试不同的导入方式解决transformers问题
+try:
+    # 方式1：直接导入
+    from transformers import BertTokenizer, BertModel
+    BERT_IMPORT_SUCCESS = True
+    print("✅ BERT导入成功 - 方式1")
+except ImportError:
+    try:
+        # 方式2：检查transformers子模块
+        import transformers
+        BertTokenizer = transformers.BertTokenizer
+        BertModel = transformers.BertModel
+        BERT_IMPORT_SUCCESS = True
+        print("✅ BERT导入成功 - 方式2")
+    except Exception as e:
+        try:
+            # 方式3：使用AutoTokenizer和AutoModel
+            from transformers import AutoTokenizer, AutoModel
+            BertTokenizer = AutoTokenizer
+            BertModel = AutoModel
+            BERT_IMPORT_SUCCESS = True
+            print("✅ BERT导入成功 - 方式3")
+        except Exception as e:
+            print(f"❌ BERT导入失败: {e}")
+            BERT_IMPORT_SUCCESS = False
+            # 创建占位类
+            class BertTokenizer:
+                @staticmethod
+                def from_pretrained(*args, **kwargs):
+                    raise ImportError("BERT库未正确安装")
+            
+            class BertModel:
+                @staticmethod
+                def from_pretrained(*args, **kwargs):
+                    raise ImportError("BERT库未正确安装")
+
+# ========== 导入其他库 ==========
 import streamlit as st
 import pickle
 import jieba
@@ -12,15 +61,28 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from collections import Counter
 
-# ========== 中文字体显示 ==========
-import matplotlib
-matplotlib.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'KaiTi']
-matplotlib.rcParams['axes.unicode_minus'] = False
+# ========== 导入PyTorch ==========
+try:
+    import torch
+    import torch.nn as nn
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+    torch = None
+    nn = None
+    print("❌ PyTorch未安装")
 
-# 设置页面
+# 检查BERT是否完全可用
+BERT_AVAILABLE = BERT_IMPORT_SUCCESS and TORCH_AVAILABLE
+
+# ========== 页面设置 ==========
 st.set_page_config(page_title="情感分析可视化系统", layout="wide")
 st.title("📊 微博情感分析可视化系统")
 st.markdown("---")
+
+# 显示BERT状态
+if not BERT_AVAILABLE:
+    st.warning("⚠️ BERT功能可能不可用，请检查PyTorch和transformers安装")
 
 # 初始化session state
 if 'history' not in st.session_state:
